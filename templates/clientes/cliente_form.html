@@ -1,0 +1,20 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+
+{% block title %}Formulario de Cliente{% endblock %}
+{% block header %}Formulario de Cliente{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Guardar
+    </button>
+    <a href="{% url 'clientes:cliente_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Volver
+    </a>
+</form>
+{% endblock %}

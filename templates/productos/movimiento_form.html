@@ -1,0 +1,13 @@
+{% extends "productos/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Registrar movimiento de stock</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'productos:producto_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Detalle de Cliente{% endblock %}
+{% block header %}Detalle de Cliente{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ cliente.apellido }}, {{ cliente.nombre }}</h5>
+        <p class="card-text"><strong>Número de documento:</strong> {{ cliente.numero_documento }}</p>
+        <p class="card-text"><strong>Email:</strong> {{ cliente.email }}</p>
+        <p class="card-text"><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+        <p class="card-text"><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'clientes:cliente_update' cliente.pk %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+        <a href="{% url 'clientes:cliente_list' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>
+{% endblock %}

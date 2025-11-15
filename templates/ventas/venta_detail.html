@@ -1,0 +1,61 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Detalle de venta{% endblock %}
+{% block header %}Detalle de la venta{% endblock %}
+
+{% block extra_buttons %}
+<a href="{% url 'ventas:venta_list' %}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> Volver a ventas
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header">
+        Datos de la venta
+    </div>
+    <div class="card-body">
+        <p><strong>Código:</strong> {{ venta.codigo }}</p>
+        <p><strong>Cliente:</strong> {{ venta.cliente }}</p>
+        <p><strong>Fecha:</strong> {{ venta.fecha|date:"d/m/Y H:i" }}</p>
+        <p><strong>Total:</strong> ${{ venta.total }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        Ítems de la venta
+    </div>
+    <div class="card-body">
+        {% if items %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.producto }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.precio_unitario }}</td>
+                        <td>${{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No hay ítems cargados para esta venta.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

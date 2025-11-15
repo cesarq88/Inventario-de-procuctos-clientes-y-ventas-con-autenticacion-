@@ -1,0 +1,25 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Eliminar Cliente{% endblock %}
+{% block header %}Eliminar Cliente{% endblock %}
+
+{% block content %}
+<div class="alert alert-danger">
+    <h4 class="alert-heading">¿Estás seguro?</h4>
+    <p>
+        Vas a eliminar al cliente:
+        <strong>{{ object.apellido }}, {{ object.nombre }} ({{ object.numero_documento }})</strong>.
+    </p>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Sí, eliminar
+        </button>
+        <a href="{% url 'clientes:cliente_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Cancelar
+        </a>
+    </form>
+</div>
+{% endblock %}

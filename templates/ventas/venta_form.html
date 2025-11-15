@@ -1,0 +1,48 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+
+{% block title %}Nueva Venta{% endblock %}
+{% block header %}Nueva Venta{% endblock %}
+
+{% block extra_buttons %}
+<a href="{% url 'productos:producto_list' %}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> Volver a Productos
+</a>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card mb-3">
+        <div class="card-header">
+            Datos de la venta
+        </div>
+        <div class="card-body">
+            {{ venta_form|crispy }}
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            Items de la venta
+        </div>
+        <div class="card-body">
+
+            {{ items_formset.management_form }}
+
+            {% for form in items_formset %}
+                <div class="border rounded p-2 mb-2">
+                    {{ form|crispy }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-check"></i> Confirmar venta
+    </button>
+</form>
+{% endblock %}
