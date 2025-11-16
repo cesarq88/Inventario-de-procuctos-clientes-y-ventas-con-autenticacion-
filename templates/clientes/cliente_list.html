@@ -13,6 +13,24 @@
 {% endblock %}
 
 {% block content %}
+<form method="get" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <input type="text"
+               name="q"
+               class="form-control"
+               placeholder="Buscar por nombre..."
+               value="{{ q }}">
+    </div>
+
+    <button type="submit" class="btn btn-outline-primary">
+        <i class="fas fa-search"></i> Buscar
+    </button>
+
+    <a href="{% url 'clientes:cliente_list' %}" class="btn btn-outline-secondary ml-2">
+        Limpiar
+    </a>
+</form>
+
 {% if clientes %}
 <div class="table-responsive">
     <table class="table table-striped table-hover">
@@ -54,6 +72,50 @@
         </tbody>
     </table>
 </div>
+{% if is_paginated %}
+<nav aria-label="Paginación de clientes">
+  <ul class="pagination justify-content-center">
+
+    {# Botón Anterior #}
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}">
+          Anterior
+        </a>
+      </li>
+    {% endif %}
+
+    {# Números de página #}
+    {% for num in paginator.page_range %}
+      {% if num == page_obj.number %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ num }}{% if q %}&q={{ q }}{% endif %}">
+            {{ num }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {# Botón Siguiente #}
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}">
+          Siguiente
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</nav>
+{% endif %}
+
 {% else %}
 <div class="alert alert-info">
     <i class="fas fa-info-circle"></i> No hay clientes registrados.

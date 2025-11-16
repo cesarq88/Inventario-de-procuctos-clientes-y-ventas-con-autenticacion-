@@ -24,7 +24,17 @@ class ClienteListView(LoginRequiredMixin, VentasPermissionMixin,ListView):
     template_name = "clientes/cliente_list.html"
     context_object_name = "clientes"
     login_url = 'account_login'
+    paginate_by = 5
 
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get("q")
+        if q:
+            queryset = queryset.filter(nombre__icontains=q)
+ 
+        return queryset.order_by('nombre')
 
 class ClienteDetailView(LoginRequiredMixin, VentasPermissionMixin,DetailView):
     model = Cliente
