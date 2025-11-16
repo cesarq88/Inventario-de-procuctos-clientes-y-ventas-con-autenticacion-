@@ -28,6 +28,7 @@ class ProductoListView(LoginRequiredMixin, StockPermissionMixin,ListView):
     template_name = "productos/producto_list.html"
     context_object_name = "productos"
     login_url = 'account_login'
+    paginate_by= 5
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -35,13 +36,19 @@ class ProductoListView(LoginRequiredMixin, StockPermissionMixin,ListView):
         stock_bajo = self.request.GET.get('stock_bajo')
         if stock_bajo:
             queryset = queryset.filter(stock__lt=F("stock_minimo"))
+        
+        q = self.request.GET.get('q') #nueva modificacoin, filtara por nombre icontains
+        if q:
+            queryset =queryset.filter(nombre__icontains=q) 
+
+              
 
         return queryset.order_by('nombre')
     
     def get_context_data(self, **kwargs):
         context =super().get_context_data(**kwargs)
         context['stock_bajo']=self.request.GET.get('stock_bajo')
-    
+        context['q'] = self.request.GET.get('q', '')
         return context
 
 class ProductoDetailView(LoginRequiredMixin, StockPermissionMixin,DetailView):
@@ -100,7 +107,7 @@ class ProductoDeleteView(LoginRequiredMixin, StockPermissionMixin,DeleteView):
     login_url = 'account_login'
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Producto eliminado exitosamente")
+        messages.success(self.request, "Producto exterminado exitosamente")
         return super().delete(request, *args, **kwargs)
 
 

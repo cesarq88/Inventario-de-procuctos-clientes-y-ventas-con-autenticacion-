@@ -1,0 +1,26 @@
+{% extends "productos/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Eliminar producto{% endblock %}
+{% block header %}Eliminar producto{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <p>
+            ¿Estás seguro de que querés eliminar el producto
+            <strong>{{ object.nombre }}</strong> (SKU {{ object.sku }})?
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'productos:producto_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> No, mejor no
+            </a>
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Sí, exterminar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
