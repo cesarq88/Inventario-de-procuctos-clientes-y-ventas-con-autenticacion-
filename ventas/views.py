@@ -3,7 +3,8 @@ from django.views import View
 from django.db import transaction
 from django.contrib import messages
 from django.db.models import Q
-
+from django.db.models import Sum         
+import json  
 
 from .models import Venta, ItemVenta
 from .forms import VentaForm, ItemVentaFormSet
@@ -45,6 +46,27 @@ class VentaListView(LoginRequiredMixin, VentasPermissionMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["q"] = self.request.GET.get("q", "")
+
+            # datos para el gráfico de ventas por día
+        ventas_por_dia = (
+            Venta.objects
+            .values("fecha__date")
+            .order_by("fecha__date")
+            .annotate(total_dia=Sum("total"))
+        )
+
+        labels = []
+        data = []
+
+        for v in ventas_por_dia:
+            fecha = v["fecha__date"]
+            total = v["total_dia"] or 0
+            labels.append(fecha.strftime("%d/%m"))   
+            data.append(float(total))
+
+        context["chart_labels"] = json.dumps(labels)
+        context["chart_data"] = json.dumps(data)
+
         return context
 
 class VentaDetailView(LoginRequiredMixin, VentasPermissionMixin,DetailView):
