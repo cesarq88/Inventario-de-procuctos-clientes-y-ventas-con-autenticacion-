@@ -8,6 +8,8 @@ from django.utils import timezone
 from .models import Producto, MovimientoStock
 from .forms import ProductoForm, MovimientoStockForm, AjusteStockForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models.deletion import ProtectedError
+
 
 class StockPermissionMixin(UserPassesTestMixin):
    # Permite acceder solo a: usuarios del grupo 'stock' ,usuarios del grupo 'administradores'  o superusuarios
@@ -100,15 +102,32 @@ class ProductoUpdateView(LoginRequiredMixin, StockPermissionMixin,UpdateView):
         return response
 
 
-class ProductoDeleteView(LoginRequiredMixin, StockPermissionMixin,DeleteView):
+class ProductoDeleteView(LoginRequiredMixin, StockPermissionMixin, DeleteView):
     model = Producto
     template_name = "productos/producto_confirm_delete.html"
     success_url = reverse_lazy("productos:producto_list")
     login_url = 'account_login'
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Producto exterminado exitosamente")
-        return super().delete(request, *args, **kwargs)
+    def form_valid(self, form):
+        # Django llega acá cuando se hace POST al formulario de confirmación
+        self.object = self.get_object()
+        try:
+            # Intentamos borrar
+            self.object.delete()
+            messages.success(
+                self.request,
+                "Producto eliminado exitosamente."
+            )
+            return redirect(self.success_url)
+        except ProtectedError:
+            # NO se puede borrar porque está en alguna venta
+            messages.error(
+                self.request,
+                "No se puede eliminar el producto porque tiene ventas asociadas."
+            )
+            # Lo mandamos al detalle (podría ser a la lista si querés)
+            return redirect("productos:producto_detail", pk=self.object.pk)
+
 
 
 class MovimientoStockCreateView(LoginRequiredMixin, StockPermissionMixin,CreateView):
