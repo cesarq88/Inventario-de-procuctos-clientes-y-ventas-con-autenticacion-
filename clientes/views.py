@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect 
 # clientes/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from django.db.models.deletion import ProtectedError
+from django.db.models import ProtectedError
 from .models import Cliente
 from .forms import ClienteForm
 
@@ -25,6 +26,8 @@ class ClienteListView(LoginRequiredMixin, VentasPermissionMixin,ListView):
     context_object_name = "clientes"
     login_url = 'account_login'
     paginate_by = 5
+
+
 
 
 
@@ -67,14 +70,27 @@ class ClienteUpdateView(LoginRequiredMixin, VentasPermissionMixin,UpdateView):
         return super().form_valid(form)
 
 
-class ClienteDeleteView(LoginRequiredMixin, VentasPermissionMixin,DeleteView):
+class ClienteDeleteView(LoginRequiredMixin, VentasPermissionMixin, DeleteView):
     model = Cliente
     template_name = "clientes/cliente_confirm_delete.html"
     success_url = reverse_lazy("clientes:cliente_list")
     login_url = 'account_login'
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Cliente eliminado exitosamente")
-        return super().delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        # Obtenemos el cliente que se quiere borrar
+        self.object = self.get_object()
 
-# Create your views here.
+        try:
+            # Intentamos borrar normalmente
+            response = super().post(request, *args, **kwargs)
+            messages.success(request, "Cliente eliminado exitosamente")
+            return response
+
+        except ProtectedError:
+            # Si hay ventas asociadas, Django lanza ProtectedError
+            messages.error(
+                request,
+                "No se puede eliminar el cliente porque tiene ventas registradas."
+            )
+            # Volvemos al detalle del cliente (podés mandarlo a la lista si preferís)
+            return redirect("clientes:cliente_detail", pk=self.object.pk)

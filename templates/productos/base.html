@@ -9,17 +9,38 @@
     {% bootstrap_css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        
+        body {
+            background-color: #f4f6f9;
+        }
+
         .navbar-brand {
             font-weight: bold;
         }
+
+        
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        .page-card {
+            background: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+        }
+
         .table-responsive {
             overflow-x: auto;
         }
+
         .product-img {
             width: 50px;
             height: 50px;
             object-fit: cover;
         }
+
         .badge-lg {
             font-size: 0.9rem;
             padding: 0.35rem 0.65rem;
@@ -65,22 +86,41 @@
                         </a>
                     </li>
                 </ul>
+
+                <div class="ml-auto d-flex align-items-center">
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text text-light mr-3">
+                            <i class="fas fa-user"></i> {{ user.username }}
+                        </span>
+                        <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-sm">
+                            Cerrar sesión
+                        </a>
+                    {% else %}
+                        <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-sm">
+                            Iniciar sesión
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
         {% bootstrap_messages %}
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>{% block header %}{% endblock %}</h2>
-            {% block extra_buttons %}{% endblock %}
+
+        {# 🔹 Card que envuelve título, botones y contenido #}
+        <div class="page-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">{% block header %}{% endblock %}</h2>
+                {% block extra_buttons %}{% endblock %}
+            </div>
+
+            {% block content %}
+            {% endblock %}
         </div>
-        
-        {% block content %}
-        {% endblock %}
     </div>
 
     {% bootstrap_javascript jquery='full' %}
 </body>
 </html>
+
