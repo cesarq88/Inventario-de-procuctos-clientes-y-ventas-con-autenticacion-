@@ -21,7 +21,17 @@ class StockPermissionMixin(UserPassesTestMixin):
             user.is_superuser
             or user.groups.filter(name__in=["stock", "administradores"]).exists()
         )
+    def handle_no_permission(self):
+        # Si está logueado pero no tiene permisos, te dice qeu no tenes permisos
+        if self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                "Lamentablemente caiste en ventas, no tenés permiso para acceder aqui"
+            )
+            return redirect("home")
 
+        # Si no está logueado, se acciona el LoginRequiredMixin
+        return super().handle_no_permission()  
 
 
 

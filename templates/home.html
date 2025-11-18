@@ -1,0 +1,41 @@
+{% extends "productos/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Inicio{% endblock %}
+{% block header %}Inicio{% endblock %}
+
+{% block content %}
+
+  {% if user.is_authenticated %}
+    <p>Hola <strong>{{ user.username }}</strong> </p>
+  {% else %}
+    <p>Bienvenido al sistema de inventario. Iniciá sesión para continuar.</p>
+  {% endif %}
+
+  {% if es_admin %}
+    <div class="alert alert-info mt-3">
+      Sos parte de <strong>administradores</strong>: tenés acceso completo al sistema
+      (productos, stock, clientes y ventas).
+    </div>
+  {% endif %}
+
+  {% if es_stock %}
+    <div class="alert alert-warning mt-3">
+      Sos usuario de <strong>stock</strong>: podés gestionar productos y movimientos.
+    </div>
+  {% endif %}
+
+  {% if es_ventas %}
+    <div class="alert alert-success mt-3">
+      Sos usuario de <strong>ventas</strong>: podés gestionar clientes y ventas.
+    </div>
+  {% endif %}
+
+  {% if not es_admin and not es_stock and not es_ventas and user.is_authenticated %}
+    <div class="alert alert-danger mt-3">
+      Tu usuario no tiene grupos asignados (stock / ventas / administradores).
+      Consultá con el administrador del sistema.
+    </div>
+  {% endif %}
+
+{% endblock %}

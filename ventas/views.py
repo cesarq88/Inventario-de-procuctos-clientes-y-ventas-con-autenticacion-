@@ -25,7 +25,14 @@ class VentasPermissionMixin(UserPassesTestMixin):
             user.is_superuser
             or user.groups.filter(name__in=["ventas", "administradores"]).exists()
         )
-
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                "Tampoco aca, acordate,  ni en Ventas y Clientes."
+            )
+            return redirect('home')
+        return super().handle_no_permission()
 
 class VentaListView(LoginRequiredMixin, VentasPermissionMixin,ListView):
     model = Venta

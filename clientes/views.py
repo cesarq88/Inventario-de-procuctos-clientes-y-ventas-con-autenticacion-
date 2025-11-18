@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect, get_object_or_404
 # clientes/views.py
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -17,7 +17,17 @@ class VentasPermissionMixin(UserPassesTestMixin):
             user.is_superuser
             or user.groups.filter(name__in=["ventas", "administradores"]).exists()
         )
+    def handle_no_permission(self):
+        # Si está logueado pero no tiene permisos, te dice qeu no tenes permisos
+        if self.request.user.is_authenticated:
+            messages.error(
+                self.request,
+                "Sos de stock, no tenés permiso para acceder a Ventas/Clientes...."
+            )
+            return redirect("home")
 
+        # Si no está logueado, se acciona el LoginRequiredMixin
+        return super().handle_no_permission()
 
 
 class ClienteListView(LoginRequiredMixin, VentasPermissionMixin,ListView):

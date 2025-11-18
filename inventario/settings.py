@@ -156,7 +156,7 @@ BOOSTSTRAP4 = {
 }
 SITE_ID = 1
 #Con esto c uando alguinte entrar a una vista protegida lo manda a iniciar sesion de allauth
-LOGIN_REDIRECT_URL = "productos:producto_list"
+LOGIN_REDIRECT_URL = "home"
 LOGOUT_URL = "account_login"  
 
 AUTHENTICATION_BACKENDS = [
