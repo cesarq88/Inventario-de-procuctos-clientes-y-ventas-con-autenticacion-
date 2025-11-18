@@ -93,7 +93,7 @@ Ventas
   - Docker y Docker Compose
 
 
-## 📁 Estructura del proyecto
+##  Estructura del proyecto
 
 En la carpeta raíz del proyecto (`inventario/`):
 
