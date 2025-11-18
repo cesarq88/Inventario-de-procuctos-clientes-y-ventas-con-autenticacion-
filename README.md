@@ -93,25 +93,26 @@ Ventas
   - Docker y Docker Compose
 
 
-## Estructura del proyecto
+## 📁 Estructura del proyecto
 
-En la carpeta raíz del proyecto (inventario/):
+En la carpeta raíz del proyecto (`inventario/`):
 
-
+```text
 inventario/
-   -clientes/          # App de clientes (modelos, vistas, forms, urls)
-   -inventario/        # Configuración del proyecto (settings, urls)
-   -media/             # Archivos subidos (imágenes de productos, etc.)
-   -productos/         # App de productos y stock
-   -static/            # Archivos estáticos 
-   -templates/         # Twemplates base y/o compartidos (home, etc.)
-   -ventas/            # App de ventas e ítems de venta
-   -.dockerignore
-   -.env               # Variables de entorno 
-  -.gitignore
-   -backup.json        # Datos de ejemplo (dump de la BD)
-   -db.sqlite3         # Base local alternativa (para desarrollo sin Docker)
-   -docker-compose.yml
-   -Dockerfile
-   -manage.py
-  -requirements.txt
+├── clientes/          # App de clientes (modelos, vistas, forms, urls)
+├── inventario/        # Configuración del proyecto (settings, urls, adapters)
+├── media/             # Archivos subidos (imágenes de productos, etc.)
+├── productos/         # App de productos y stock
+├── static/            # Archivos estáticos
+├── templates/         # Templates base y/o compartidos (home, etc.)
+├── ventas/            # App de ventas e ítems de venta
+├── .dockerignore
+├── .env               # Variables de entorno (config de ejemplo)
+├── .gitignore
+├── backup.json        # Datos de ejemplo (dump de la BD)
+├── db.sqlite3         # Base local alternativa (para desarrollo sin Docker)
+├── docker-compose.yml
+├── Dockerfile
+├── manage.py
+└── requirements.txt
+
