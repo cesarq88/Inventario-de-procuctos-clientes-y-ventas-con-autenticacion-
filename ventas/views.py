@@ -5,6 +5,11 @@ from django.contrib import messages
 from django.db.models import Q
 from django.db.models import Sum         
 import json  
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+
+
 
 from .models import Venta, ItemVenta
 from .forms import VentaForm, ItemVentaFormSet
@@ -78,6 +83,43 @@ class VentaDetailView(LoginRequiredMixin, VentasPermissionMixin,DetailView):
         context = super().get_context_data(**kwargs)
         context["items"] = self.object.items.all()
         return context
+class VentaPDFView(LoginRequiredMixin, VentasPermissionMixin, DetailView):
+    model = Venta
+    template_name = "ventas/venta_pdf.html"
+    context_object_name = "venta"
+    login_url = 'account_login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["items"] = self.object.items.all()
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        # 1) Renderizamos la plantilla a HTML (string)
+        html_string = render_to_string(
+            self.template_name,
+            context,
+            request=self.request,
+        )
+
+        # 2) Armamos la respuesta HTTP de tipo PDF
+        filename = f"venta_{self.object.codigo}.pdf"
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="{filename}"'
+
+        
+        pisa_status = pisa.CreatePDF(
+            html_string,
+            dest=response,
+        )
+
+        # Si hubo error, devolvemos un mensaje simple
+        if pisa_status.err:
+            return HttpResponse("Error al generar el PDF de la venta", status=500)
+
+        return response
+
+
 
 class VentaCreateView(LoginRequiredMixin, VentasPermissionMixin, View):
     template_name = "ventas/venta_form.html"

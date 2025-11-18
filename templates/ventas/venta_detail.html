@@ -8,6 +8,10 @@
 <a href="{% url 'ventas:venta_list' %}" class="btn btn-secondary">
     <i class="fas fa-arrow-left"></i> Volver a ventas
 </a>
+<a href="{% url 'ventas:venta_pdf' venta.pk %}" class="btn btn-outline-danger btn-sm">
+    <i class="fas fa-file-pdf"></i> Descargar comprobante
+</a>
+
 {% endblock %}
 
 {% block content %}

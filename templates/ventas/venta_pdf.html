@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Comprobante de venta {{ venta.codigo }}</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 12px;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .small {
+      font-size: 11px;
+      color: #555;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .right {
+      text-align: right;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 10px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>Comprobante de venta {{ venta.codigo }}</h1>
+  <p class="small">
+    Fecha: {{ venta.fecha|date:"d/m/Y H:i" }}<br>
+    Cliente: {{ venta.cliente.nombre }} {{ venta.cliente.apellido }}<br>
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="right">Cantidad</th>
+        <th class="right">Precio unit.</th>
+        <th class="right">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.producto.nombre }}</td>
+          <td class="right">{{ item.cantidad }}</td>
+          <td class="right">${{ item.precio_unitario }}</td>
+          <td class="right">${{ item.subtotal }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="3" class="right">TOTAL</th>
+        <th class="right">${{ venta.total }}</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="footer">
+    Generado el {% now "d/m/Y H:i" %} por {{ request.user|default:"sistema" }}
+  </div>
+</body>
+</html>

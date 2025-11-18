@@ -12,3 +12,4 @@ typing_extensions==4.15.0
 tzdata==2025.2
 django-environ
 psycopg2-binary
+xhtml2pdf==0.2.15
