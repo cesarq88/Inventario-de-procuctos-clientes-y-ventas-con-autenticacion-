@@ -32,10 +32,10 @@
   {% endif %}
 
   {% if not es_admin and not es_stock and not es_ventas and user.is_authenticated %}
-    <div class="alert alert-danger mt-3">
-      Tu usuario no tiene grupos asignados (stock / ventas / administradores).
-      Consultá con el administrador del sistema.
-    </div>
-  {% endif %}
+    ... mensaje de “no tiene grupos” ...
+{% endif %}
+
+
+  
 
 {% endblock %}
